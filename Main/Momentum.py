@@ -1,3 +1,7 @@
+#MOMENTUM TRADING ALGORITHM
+
+
+
 #Import Necessary Libraries.
 from blueshift.api import (
     symbol,
@@ -17,13 +21,13 @@ def initialize(context):
     context.assets = [symbol("_"), symbol("_"), symbol("_"), symbol("_")] #Replace Underscores With Desired Stocks' Tickers (Symbols)
     #Define Lookback (Rolling) Window.
     context.window = _ #Replace Underscore With Desired Lookback Period.
-    #Define Entry Z-Score.
+    #Define Entry Z-Score Threshold.
     context.entry_z = _ #Replace Underscore With Desired Entry Z-Score.
-    #Define Exit Z-Score.
+    #Define Exit Z-Score Threshold.
     context.exit_z = _ #Replace Underscore With Desired Exit Z-Score.
-    #Assign Equal Portfolio Weeight To Each Asset.
+    #Assign Equal Portfolio Weight To Each Asset.
     context.weight = 1.0 / len(context.assets)
-    #Schedule Trdaing Function.
+    #Schedule Trading Function.
     schedule_function(trade, date_rules.every_day(), time_rules.market_open())
 
 
@@ -48,12 +52,13 @@ def trade(context, data):
             continue
         #Calculate Z-Score.
         z = (returns.iloc[-1] - mean) / std
-
+        #Main Long-Short Logic.
+        #If Z-Score > Entry Z-Score Threshold Go Long.
         if z >= context.entry_z:
             order_target_percent(asset, context.weight)
-
-        elif z <= -context.entry_z:
+        #If Z-Score < Entry Z-Score Threshold Go Short.  
+        if z <= -context.entry_z:
             order_target_percent(asset, -context.weight)
-
-        elif abs(z) <= context.exit_z:
+        #If |Z-Score| <= Exit Z-Score Threshold Close Position.
+        if abs(z) <= context.exit_z:
             order_target_percent(asset, 0.0)
