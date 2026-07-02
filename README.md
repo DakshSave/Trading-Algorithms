@@ -1,2 +1,5 @@
-# EC-Blueshift-Trading-Algorithms
-Mean Reversion &amp; Momentum Strategy Algorithms made under the direct guidance of Dr. Ernest Chan. 
+# Trading-Algorithms
+
+Trading Algorithms compatible with Blueshift, scripted in python.
+The algorithms consist of:
+
